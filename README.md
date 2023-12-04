@@ -16,7 +16,7 @@ npm i
 npm dev
 ```
 
-Transpile Typescript for and run production server: 
+Transpile Typescript and run production server: 
 
 ```bash
 npm run build
