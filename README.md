@@ -4,8 +4,7 @@ Questions & Answers API Service
 
 ## Overview
 
-This project is setup with [Fastify](https://fastify.dev/) in place of Express for performance and compatibility with Typescript.
-Typescript tsconfig.json file generated with `npx tsc --init`. 
+This project is setup with Typescript with the tsconfig.json file generated with `npx tsc --init`. 
 
 ## Getting started
 
