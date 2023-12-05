@@ -1,8 +1,11 @@
+import 'dotenv/config';
 import fastify from 'fastify'; 
+import db from './db';
 
 const server = fastify(); 
 
 server.get('/', async(req, res) => {
+  db.query('SELECT * FROM questions');
 	return 'Hello there!';
 });
 
