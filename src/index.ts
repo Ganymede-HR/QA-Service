@@ -1,18 +1,18 @@
 import 'dotenv/config';
-import fastify from 'fastify'; 
+import fastify from 'fastify';
 import db from './db';
 
-const server = fastify(); 
+const server = fastify();
 
-server.get('/', async(req, res) => {
+server.get('/', async () => {
   db.query('SELECT * FROM questions');
-	return 'Hello there!';
+  return 'Hello there!';
 });
 
 server.listen({ port: 8080 }, (err, address) => {
-	if (err) {
-		console.error(err);
-		process.exit(1);  
-	}
-	console.log(`Started server at ${address}`);
-})
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.log(`Started server at ${address}`);
+});

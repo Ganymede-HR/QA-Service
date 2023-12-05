@@ -1,28 +1,30 @@
-import mysql from 'mysql2/promise'; 
+import mysql from 'mysql2/promise';
 
-const DATABASE_HOST = process.env.DATABASE_HOST; 
-const DATABASE_PORT = process.env.DATABASE_PORT; 
-const DATABASE_USER = process.env.DATABASE_USER;
-const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD; 
+const {
+  DATABASE_HOST,
+  DATABASE_PORT,
+  DATABASE_USER,
+  DATABASE_PASSWORD,
+} = process.env || {};
 
-const DATABASE = 'ganymede_QA'
+const DATABASE = 'ganymede_QA';
 
 if (!DATABASE_HOST || !DATABASE_PORT || !DATABASE_USER || !DATABASE_PASSWORD) {
-  throw new Error('missing database credentials'); 
+  throw new Error('missing database credentials');
 }
 
 const db = mysql.createPool({
-  host: DATABASE_HOST, 
-  user: DATABASE_USER, 
-  port: +DATABASE_PORT, 
+  host: DATABASE_HOST,
+  user: DATABASE_USER,
+  port: +DATABASE_PORT,
   password: DATABASE_PASSWORD,
-  waitForConnections: true
+  waitForConnections: true,
 });
 
 db.query(`CREATE DATABASE IF NOT EXISTS ${DATABASE}`)
- .then(() => db.query(`USE ${DATABASE}`))
- .then(() => db.query(`CREATE TABLE IF NOT EXISTS questions (
-  id INT NOT NULL AUTO_INCREMENT, 
+  .then(() => db.query(`USE ${DATABASE}`))
+  .then(() => db.query(`CREATE TABLE IF NOT EXISTS questions (
+  id INT NOT NULL AUTO_INCREMENT,
   body TEXT,
   date_written DATETIME DEFAULT CURRENT_TIMESTAMP,
   asker_name VARCHAR(64),
@@ -32,7 +34,7 @@ db.query(`CREATE DATABASE IF NOT EXISTS ${DATABASE}`)
 
   PRIMARY KEY (id)
  )`))
- .then(() => db.query(`CREATE TABLE IF NOT EXISTS answers (
+  .then(() => db.query(`CREATE TABLE IF NOT EXISTS answers (
   id INT NOT NULL AUTO_INCREMENT, 
   question_id INT NOT NULL,
   body TEXT,
@@ -45,7 +47,7 @@ db.query(`CREATE DATABASE IF NOT EXISTS ${DATABASE}`)
   PRIMARY KEY (id),
   FOREIGN KEY (question_id) REFERENCES questions(id)
  )`))
- .then(() => db.query(`CREATE TABLE IF NOT EXISTS answer_photos (
+  .then(() => db.query(`CREATE TABLE IF NOT EXISTS answer_photos (
   id INT NOT NULL AUTO_INCREMENT, 
   answer_id INT NOT NULL, 
   url TEXT NOT NULL, 
@@ -53,8 +55,6 @@ db.query(`CREATE DATABASE IF NOT EXISTS ${DATABASE}`)
   PRIMARY KEY (id), 
   FOREIGN KEY (answer_id) REFERENCES answers(id)
  )`))
- .then(() => console.log('connected to', DATABASE));
+  .then(() => console.log('connected to', DATABASE));
 
-
-
-export default db; 
+export default db;
