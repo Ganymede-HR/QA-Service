@@ -1,22 +1,24 @@
 import type { RowDataPacket } from 'mysql2';
-import type { GetQuestionsResultType } from '../types';
+import type { GetQuestionsResultType, QuestionType } from '../types';
 import db from '../db';
 
-interface GetQuestionRawResult extends RowDataPacket {
+interface GetQuestionAnswersRawResult extends RowDataPacket {
+  a_id: number;
+  body: string;
+  date_written: Date;
+  answerer_name: string;
+  helpfulness: number;
+  id: number;
+  url: string;
+}
+interface GetQuestionRawResult extends GetQuestionAnswersRawResult {
   question_id: number;
   question_body: number;
   question_date: Date;
   asker_name: string;
   question_helpfulness: number;
   reported: number;
-  a_id: number;
-  body: string;
-  date_written: Date;
-  answerer_name: string;
-  helpfulness: number;
   answer_row_num: number;
-  id: number;
-  url: string;
 }
 
 const getQuestions = async (
@@ -24,14 +26,14 @@ const getQuestions = async (
     product_id,
     page = 1,
     count = 5,
-  }
-  :
+  } :
   {
-    product_id: string;
+    product_id: number;
     page?: number;
     count?:number
   },
-): Promise<any | GetQuestionsResultType> => {
+): Promise<GetQuestionsResultType> => {
+  const offset = Math.max((page - 1) * count, 0);
   const rawResults = await db.query<GetQuestionRawResult[]>(`
     WITH qa AS (
       SELECT 
@@ -67,7 +69,7 @@ const getQuestions = async (
     ) AS an
     LEFT JOIN answer_photos ap ON ap.answer_id = an.a_id
     WHERE an.answer_row_num <= ?;
-  `, [product_id, count, page - 1, count]);
+  `, [product_id, count, offset, count]);
 
   const transformedResultsObject = rawResults[0].reduce((acc: any, c) => {
     const answerPhoto = c.id ? {
@@ -112,15 +114,77 @@ const getQuestions = async (
 
     return acc;
   }, {});
-  const transformedResults = Object.values(transformedResultsObject);
+  const transformedResults = Object.values(transformedResultsObject) as QuestionType[];
   return {
-    product_id,
+    product_id: `${product_id}`,
     results: transformedResults,
   };
 };
 
-const getQuestionAnswers = async () => {
-
+const getQuestionAnswers = async (
+  {
+    question_id,
+    page = 1,
+    count = 5,
+  } :
+  {
+    question_id: number,
+    page?: number,
+    count?: number,
+  },
+) => {
+  const offset = Math.max((page - 1) * count, 0);
+  const rawResult = await db.query<GetQuestionAnswersRawResult[]>(`
+    WITH a AS (
+      SELECT
+        a.id AS a_id,
+        a.body,
+        a.date_written,
+        a.answerer_name,
+        a.helpful AS helpfulness
+      FROM
+        answers a
+      WHERE
+        a.question_id = ?
+        AND
+        a.reported <> TRUE
+      ORDER BY
+        date_written
+      LIMIT ?
+      OFFSET ?
+    )
+    SELECT a.*, ap.id, ap.url
+    FROM a
+    LEFT JOIN answer_photos ap ON a.a_id = ap.answer_id
+  `, [question_id, count, offset]);
+  const transformedResultsObject = rawResult[0].reduce((acc: any, c) => {
+    const answerPhoto = c.id ? {
+      id: c.id,
+      url: c.url,
+    } : undefined;
+    if (acc[c.a_id]) {
+      if (c.id) {
+        acc[c.a_id].photos.push(answerPhoto);
+      }
+    } else {
+      acc[c.a_id] = {
+        answer_id: c.a_id,
+        body: c.body,
+        date: c.date_written,
+        answerer_name: c.answerer_name,
+        helpfulness: c.helpfulness,
+        photos: answerPhoto ? [answerPhoto] : [],
+      };
+    }
+    return acc;
+  }, {});
+  const transformedResults = Object.values(transformedResultsObject);
+  return {
+    question: `${question_id}`,
+    page,
+    count,
+    results: transformedResults,
+  };
 };
 
 const createQuestion = async () => {

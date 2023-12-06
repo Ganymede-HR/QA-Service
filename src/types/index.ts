@@ -28,3 +28,10 @@ export type GetQuestionsResultType = {
   product_id: string,
   results: QuestionType[]
 };
+
+export type GetQuestionsAnswersResultType = {
+  question: number,
+  page: number,
+  count: number,
+  results: AnswersType[]
+};
