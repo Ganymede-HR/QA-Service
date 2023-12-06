@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 
 // POST question
 router.post('/', (req, res) => {
-  res.send('post question');
+  res.status(201).send('post question');
 });
 
 // GET question answers
@@ -19,17 +19,17 @@ router.get('/:question_id/answers', (req, res) => {
 
 // POST a new answer
 router.post('/:question_id/answers', (req, res) => {
-  res.send(`post answer for question ${req.params?.question_id}`);
+  res.status(201).send(`post answer for question ${req.params?.question_id}`);
 });
 
 // PUT mark question helpful
 router.put('/:question_id/helpful', (req, res) => {
-  res.send(`put helpful for question ${req.params?.question_id}`);
+  res.status(204).send(`put helpful for question ${req.params?.question_id}`);
 });
 
 // PUT report question
 router.put('/:question_id/report', (req, res) => {
-  res.send(`put report for question ${req.params?.question_id}`);
+  res.status(204).send(`put report for question ${req.params?.question_id}`);
 });
 
 export default router;
