@@ -5,10 +5,9 @@
     "airbnb-typescript"
   ],
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": ["./tsconfig.json", "./tsconfig.test.json"]
   },
   "rules": {
     "react/jsx-filename-extension": "off"
-  }
- 
+  } 
 }

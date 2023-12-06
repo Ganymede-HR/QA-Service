@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express, { json } from 'express';
-import db from './db';
+import { db } from './db';
 import router from './routes';
 
 const PORT = process.env.port || 8080;
@@ -14,6 +14,21 @@ app.get('/', async (req, res) => {
   res.send('Hello there');
 });
 
-app.listen({ port: PORT }, () => {
+const server = app.listen({ port: PORT }, () => {
   console.log(`Started server on port ${PORT}`);
 });
+
+const closeServer = () => (
+  new Promise((resolve, reject) => {
+    server.close((err) => {
+      if (err) {
+        console.error('Error closing server', err);
+        reject(err);
+      } else {
+        console.log('Server closed');
+        resolve(null);
+      }
+    });
+  })
+);
+export { app, closeServer };
