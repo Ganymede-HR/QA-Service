@@ -25,6 +25,7 @@ db.query(`CREATE DATABASE IF NOT EXISTS ${DATABASE}`)
   .then(() => db.query(`USE ${DATABASE}`))
   .then(() => db.query(`CREATE TABLE IF NOT EXISTS questions (
   id INT NOT NULL AUTO_INCREMENT,
+  product_id INT NOT NULL,
   body TEXT,
   date_written DATETIME DEFAULT CURRENT_TIMESTAMP,
   asker_name VARCHAR(64),
