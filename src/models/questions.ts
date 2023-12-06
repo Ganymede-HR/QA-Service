@@ -187,22 +187,56 @@ const getQuestionAnswers = async (
   };
 };
 
-const createQuestion = async () => {
+const postQuestion = (
+  {
+    body,
+    name,
+    email,
+    product_id,
+  } :
+  {
+    body: string;
+    name: string;
+    email: string;
+    product_id: number;
+  },
+) => (
+  db.query(`
+    INSERT INTO questions (body, asker_name, asker_email, product_id)
+    VALUES (?,?,?,?)
+  `, [body, name, email, product_id])
+);
 
-};
+const markQuestionHelpful = (
+  {
+    question_id,
+  } :
+  {
+    question_id: number
+  },
+) => (
+  db.query(`
+    UPDATE questions SET helpful = helpful + 1 WHERE id = ?
+  `, [question_id])
+);
 
-const markQuestionHelpful = async () => {
-
-};
-
-const reportQuestion = async () => {
-
-};
+const reportQuestion = (
+  {
+    question_id,
+  } :
+  {
+    question_id: number
+  },
+) => (
+  db.query(`
+    UPDATE questions SET reported = true WHERE id = ?
+  `, [question_id])
+);
 
 export {
   getQuestions,
   getQuestionAnswers,
-  createQuestion,
+  postQuestion,
   markQuestionHelpful,
   reportQuestion,
 };
