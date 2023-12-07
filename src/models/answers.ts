@@ -35,28 +35,28 @@ const postAnswer = (
 
 const markAnswerHelpful = (
   {
-    question_id,
+    answer_id,
   } :
   {
-    question_id: number
+    answer_id: number
   },
 ) => (
   db.query(`
-    UPDATE questions SET helpful = helpful + 1 WHERE id = ?
-  `, [question_id])
+    UPDATE answers SET helpful = helpful + 1 WHERE id = ?
+  `, [answer_id])
 );
 
 const reportAnswer = (
   {
-    question_id,
+    answer_id,
   } :
   {
-    question_id: number
+    answer_id: number
   },
 ) => (
   db.query(`
-    UPDATE questions SET reported = true WHERE id = ?
-  `, [question_id])
+    UPDATE answers SET reported = true WHERE id = ?
+  `, [answer_id])
 );
 
 export {
