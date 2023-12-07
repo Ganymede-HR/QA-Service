@@ -1,6 +1,6 @@
 import type { RowDataPacket } from 'mysql2';
 import type { GetQuestionsResultType, QuestionType } from '../types';
-import db from '../db';
+import { db } from '../db';
 
 interface GetQuestionAnswersRawResult extends RowDataPacket {
   a_id: number;
