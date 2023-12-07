@@ -3,14 +3,14 @@ import { db } from '../db';
 
 const postAnswer = (
   {
-    question_id,
+    questionId,
     body,
     name,
     email,
     photos,
   } :
   {
-    question_id: number;
+    questionId: number;
     body: string;
     name: string;
     email: string;
@@ -20,7 +20,7 @@ const postAnswer = (
   db.execute<ResultSetHeader>(`
      INSERT INTO answers (question_id, body, answerer_name, answerer_email)
      VALUES (?, ?, ?, ?)
-  `, [question_id, body, name, email])
+  `, [questionId, body, name, email])
     .then((result) => {
       const answerId = result[0].insertId;
       return db.query(
@@ -35,28 +35,28 @@ const postAnswer = (
 
 const markAnswerHelpful = (
   {
-    answer_id,
+    answerId,
   } :
   {
-    answer_id: number
+    answerId: number
   },
 ) => (
   db.query(`
     UPDATE answers SET helpful = helpful + 1 WHERE id = ?
-  `, [answer_id])
+  `, [answerId])
 );
 
 const reportAnswer = (
   {
-    answer_id,
+    answerId,
   } :
   {
-    answer_id: number
+    answerId: number
   },
 ) => (
   db.query(`
     UPDATE answers SET reported = true WHERE id = ?
-  `, [answer_id])
+  `, [answerId])
 );
 
 export {

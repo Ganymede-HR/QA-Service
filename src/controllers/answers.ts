@@ -6,10 +6,10 @@ const router = Router();
 // PUT mark answer helpful
 router.put('/:answerId/helpful', (req, res) => {
   const { answerId } = req.params;
-  markAnswerHelpful({ answer_id: +answerId })
+  markAnswerHelpful({ answerId: +answerId })
     .then(() => res.status(204))
     .catch((err) => {
-      console.error('answer helpflu err:', err);
+      console.error('answer helpful err:', err);
       res.status(500);
     });
 });
@@ -17,7 +17,7 @@ router.put('/:answerId/helpful', (req, res) => {
 // PUT report answer
 router.put('/:answerId/report', (req, res) => {
   const { answerId } = req.params;
-  reportAnswer({ answer_id: +answerId })
+  reportAnswer({ answerId: +answerId })
     .then(() => res.status(204))
     .catch((err) => {
       console.error('answer report err:', err);
