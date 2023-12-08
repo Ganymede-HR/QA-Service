@@ -1,0 +1,32 @@
+{
+  "question": "4",
+  "page": 1,
+  "count": 20,
+  "results": [
+      {
+          "answer_id": 65,
+          "body": "It runs small",
+          "date": "2020-11-19T16:11:47.000Z",
+          "answerer_name": "dschulman",
+          "helpfulness": 1,
+          "photos": [
+              {
+                  "id": 14,
+                  "url": "https://images.unsplash.com/photo-1470116892389-0de5d9770b2c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80"
+              },
+              {
+                  "id": 15,
+                  "url": "https://images.unsplash.com/photo-1536922645426-5d658ab49b81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80"
+              }
+          ]
+      },
+      {
+          "answer_id": 89,
+          "body": "Showing no wear after a few months!",
+          "date": "2020-09-03T03:33:30.000Z",
+          "answerer_name": "sillyguy",
+          "helpfulness": 8,
+          "photos": []
+      }
+  ]
+}

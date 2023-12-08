@@ -1,6 +1,6 @@
 import type { RowDataPacket } from 'mysql2';
 import type { GetQuestionsResultType, QuestionType } from '../types';
-import db from '../db';
+import { db } from '../db';
 
 interface GetQuestionAnswersRawResult extends RowDataPacket {
   a_id: number;
@@ -23,12 +23,12 @@ interface GetQuestionRawResult extends GetQuestionAnswersRawResult {
 
 const getQuestions = async (
   {
-    product_id,
+    productId,
     page = 1,
     count = 5,
   } :
   {
-    product_id: number;
+    productId: number;
     page?: number;
     count?:number
   },
@@ -69,7 +69,7 @@ const getQuestions = async (
     ) AS an
     LEFT JOIN answer_photos ap ON ap.answer_id = an.a_id
     WHERE an.answer_row_num <= ?;
-  `, [product_id, count, offset, count]);
+  `, [productId, count, offset, count]);
 
   const transformedResultsObject = rawResults[0].reduce((acc: any, c) => {
     const answerPhoto = c.id ? {
@@ -97,6 +97,7 @@ const getQuestions = async (
       } else {
         acc[c.question_id].answers = { [c.a_id]: answer };
       }
+      acc[c.question_id].answers[c.a_id]?.photos?.sort((a: any, b: any) => (+a.id) - (+b.id));
     } else {
       acc[c.question_id] = {
         question_id: c.question_id,
@@ -111,24 +112,23 @@ const getQuestions = async (
         },
       };
     }
-
     return acc;
   }, {});
   const transformedResults = Object.values(transformedResultsObject) as QuestionType[];
   return {
-    product_id: `${product_id}`,
+    product_id: `${productId}`,
     results: transformedResults,
   };
 };
 
 const getQuestionAnswers = async (
   {
-    question_id,
+    questionId,
     page = 1,
     count = 5,
   } :
   {
-    question_id: number,
+    questionId: number,
     page?: number,
     count?: number,
   },
@@ -156,7 +156,7 @@ const getQuestionAnswers = async (
     SELECT a.*, ap.id, ap.url
     FROM a
     LEFT JOIN answer_photos ap ON a.a_id = ap.answer_id
-  `, [question_id, count, offset]);
+  `, [questionId, count, offset]);
   const transformedResultsObject = rawResult[0].reduce((acc: any, c) => {
     const answerPhoto = c.id ? {
       id: c.id,
@@ -166,6 +166,7 @@ const getQuestionAnswers = async (
       if (c.id) {
         acc[c.a_id].photos.push(answerPhoto);
       }
+      acc[c.a_id]?.photos?.sort((a: any, b: any) => (+a.id) - (+b.id));
     } else {
       acc[c.a_id] = {
         answer_id: c.a_id,
@@ -180,7 +181,7 @@ const getQuestionAnswers = async (
   }, {});
   const transformedResults = Object.values(transformedResultsObject);
   return {
-    question: `${question_id}`,
+    question: `${questionId}`,
     page,
     count,
     results: transformedResults,
@@ -192,45 +193,45 @@ const postQuestion = (
     body,
     name,
     email,
-    product_id,
+    productId,
   } :
   {
-    body: string;
-    name: string;
-    email: string;
-    product_id: number;
+    body?: string;
+    name?: string;
+    email?: string;
+    productId: number;
   },
 ) => (
   db.query(`
     INSERT INTO questions (body, asker_name, asker_email, product_id)
     VALUES (?,?,?,?)
-  `, [body, name, email, product_id])
+  `, [body || null, name || null, email || null, productId])
 );
 
 const markQuestionHelpful = (
   {
-    question_id,
+    questionId,
   } :
   {
-    question_id: number
+    questionId: number
   },
 ) => (
   db.query(`
     UPDATE questions SET helpful = helpful + 1 WHERE id = ?
-  `, [question_id])
+  `, [questionId])
 );
 
 const reportQuestion = (
   {
-    question_id,
+    questionId,
   } :
   {
-    question_id: number
+    questionId: number
   },
 ) => (
   db.query(`
     UPDATE questions SET reported = true WHERE id = ?
-  `, [question_id])
+  `, [questionId])
 );
 
 export {

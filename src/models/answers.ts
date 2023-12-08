@@ -1,62 +1,65 @@
 import type { ResultSetHeader } from 'mysql2';
-import db from '../db';
+import { db } from '../db';
 
 const postAnswer = (
   {
-    question_id,
+    questionId,
     body,
     name,
     email,
     photos,
   } :
   {
-    question_id: number;
-    body: string;
-    name: string;
-    email: string;
-    photos: string[];
+    questionId: number;
+    body?: string;
+    name?: string;
+    email?: string;
+    photos?: string[];
   },
 ) => (
   db.execute<ResultSetHeader>(`
      INSERT INTO answers (question_id, body, answerer_name, answerer_email)
      VALUES (?, ?, ?, ?)
-  `, [question_id, body, name, email])
+  `, [questionId, body || null, name || null, email || null])
     .then((result) => {
-      const answerId = result[0].insertId;
-      return db.query(
-        `
-        INSERT INTO answer_photos (answer_id, url) 
-        VALUES ${photos.map(() => ('(?, ?)')).join(',')}
-        `,
-        photos.map((p) => [answerId, p]).flat(),
-      );
+      if (photos && photos.length > 0) {
+        const answerId = result[0].insertId;
+        return db.query(
+          `
+          INSERT INTO answer_photos (answer_id, url) 
+          VALUES ${photos.map(() => ('(?, ?)')).join(',')}
+          `,
+          photos.map((p) => [answerId, p]).flat(),
+        );
+      }
+      return result;
     })
 );
 
 const markAnswerHelpful = (
   {
-    question_id,
+    answerId,
   } :
   {
-    question_id: number
+    answerId: number
   },
 ) => (
   db.query(`
-    UPDATE questions SET helpful = helpful + 1 WHERE id = ?
-  `, [question_id])
+    UPDATE answers SET helpful = helpful + 1 WHERE id = ?
+  `, [answerId])
 );
 
 const reportAnswer = (
   {
-    question_id,
+    answerId,
   } :
   {
-    question_id: number
+    answerId: number
   },
 ) => (
   db.query(`
-    UPDATE questions SET reported = true WHERE id = ?
-  `, [question_id])
+    UPDATE answers SET reported = true WHERE id = ?
+  `, [answerId])
 );
 
 export {

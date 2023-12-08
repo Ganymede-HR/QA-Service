@@ -1,35 +1,130 @@
 import { Router } from 'express';
+import {
+  getQuestionAnswers,
+  getQuestions,
+  markQuestionHelpful,
+  postQuestion,
+  reportQuestion,
+} from '../models/questions';
+import { postAnswer } from '../models/answers';
 
 const router = Router();
 
 // GET question list
 router.get('/', (req, res) => {
-  res.send('question list');
+  const { product_id: productId, page, count } = req.query;
+
+  if (!productId) {
+    res.status(400).send('product_id required');
+    return;
+  }
+
+  getQuestions(
+    {
+      productId: +productId,
+      page: page ? +page : undefined,
+      count: count ? +count : undefined,
+    },
+  )
+    .then((data) => res.json(data))
+    .catch((err) => {
+      console.error('get questions err: ', err);
+      res.sendStatus(500);
+    });
 });
 
 // POST question
 router.post('/', (req, res) => {
-  res.status(201).send('post question');
+  const {
+    body,
+    name,
+    email,
+    product_id: productId,
+  } = req.body;
+
+  if (!productId) {
+    res.status(400).send('product_id required');
+    return;
+  }
+
+  postQuestion({
+    body,
+    name,
+    email,
+    productId: +productId,
+  })
+    .then(() => res.sendStatus(201))
+    .catch((err) => {
+      console.error('post question error: ', err);
+      res.sendStatus(500);
+    });
 });
 
 // GET question answers
-router.get('/:question_id/answers', (req, res) => {
-  res.send(`answer list for question ${req.params?.question_id}`);
+router.get('/:questionId/answers', (req, res) => {
+  const { questionId } = req.params;
+  const { page, count } = req.query;
+
+  getQuestionAnswers(
+    {
+      questionId: +questionId,
+      page: page ? +page : undefined,
+      count: count ? +count : undefined,
+    },
+  )
+    .then((data) => res.json(data))
+    .catch((err) => {
+      console.error('get question answers err: ', err);
+      res.sendStatus(500);
+    });
 });
 
 // POST a new answer
-router.post('/:question_id/answers', (req, res) => {
-  res.status(201).send(`post answer for question ${req.params?.question_id}`);
+router.post('/:questionId/answers', (req, res) => {
+  const { questionId } = req.params;
+  const {
+    body,
+    name,
+    email,
+    photos,
+  } = req.body;
+
+  postAnswer({
+    questionId: +questionId,
+    body,
+    name,
+    email,
+    photos,
+  })
+    .then(() => res.sendStatus(201))
+    .catch((err) => {
+      console.error('post answer error: ', err);
+      res.sendStatus(500);
+    });
 });
 
 // PUT mark question helpful
-router.put('/:question_id/helpful', (req, res) => {
-  res.status(204).send(`put helpful for question ${req.params?.question_id}`);
+router.put('/:questionId/helpful', (req, res) => {
+  const { questionId } = req.params;
+
+  markQuestionHelpful({ questionId: +questionId })
+    .then(() => res.sendStatus(204))
+    .catch((err) => {
+      console.error('question helpful error: ', err);
+      res.sendStatus(500);
+    });
 });
 
 // PUT report question
-router.put('/:question_id/report', (req, res) => {
-  res.status(204).send(`put report for question ${req.params?.question_id}`);
+router.put('/:questionId/report', (req, res) => {
+  const { questionId } = req.params;
+
+  reportQuestion({ questionId: +questionId })
+    .then(() => res.sendStatus(204))
+    .catch((err) => {
+      console.error('question helpful error: ', err);
+      res.sendStatus(500);
+    });
 });
 
 export default router;
