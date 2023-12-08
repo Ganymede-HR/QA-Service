@@ -36,6 +36,7 @@ export default async function seedTestDB() {
     password: DATABASE_PASSWORD,
     database: DATABASE_NAME,
     waitForConnections: true,
+    timezone: 'Z',
   });
 
   await Promise.all(

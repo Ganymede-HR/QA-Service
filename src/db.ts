@@ -19,6 +19,7 @@ const db = mysql.createPool({
   port: +DATABASE_PORT,
   password: DATABASE_PASSWORD,
   waitForConnections: true,
+  timezone: 'Z',
 });
 
 const initializeDB = async () => {

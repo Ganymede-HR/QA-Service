@@ -1,67 +1,31 @@
 {
-  "question": "1",
+  "question": "4",
   "page": 1,
   "count": 20,
   "results": [
       {
-          "answer_id": 5,
-          "body": "Something pretty soft but I can't be sure",
-          "date": "2020-09-13T13:49:21.000Z",
-          "answerer_name": "metslover",
-          "helpfulness": 5,
+          "answer_id": 65,
+          "body": "It runs small",
+          "date": "2020-11-19T16:11:47.000Z",
+          "answerer_name": "dschulman",
+          "helpfulness": 1,
           "photos": [
               {
-                  "id": 1,
-                  "url": "https://images.unsplash.com/photo-1530519729491-aea5b51d1ee1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80"
+                  "id": 14,
+                  "url": "https://images.unsplash.com/photo-1470116892389-0de5d9770b2c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80"
               },
               {
-                  "id": 2,
-                  "url": "https://images.unsplash.com/photo-1511127088257-53ccfcc769fa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80"
-              },
-              {
-                  "id": 3,
-                  "url": "https://images.unsplash.com/photo-1500603720222-eb7a1f997356?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1653&q=80"
+                  "id": 15,
+                  "url": "https://images.unsplash.com/photo-1536922645426-5d658ab49b81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80"
               }
           ]
       },
       {
-          "answer_id": 7,
-          "body": "Its the best! Seriously magic fabric",
-          "date": "2021-02-27T23:45:25.000Z",
-          "answerer_name": "metslover",
-          "helpfulness": 7,
-          "photos": []
-      },
-      {
-          "answer_id": 8,
-          "body": "DONT BUY IT! It's bad for the environment",
-          "date": "2020-09-20T01:49:23.000Z",
-          "answerer_name": "metslover",
+          "answer_id": 89,
+          "body": "Showing no wear after a few months!",
+          "date": "2020-09-03T03:33:30.000Z",
+          "answerer_name": "sillyguy",
           "helpfulness": 8,
-          "photos": []
-      },
-      {
-          "answer_id": 57,
-          "body": "Suede",
-          "date": "2021-04-11T20:51:31.000Z",
-          "answerer_name": "metslover",
-          "helpfulness": 7,
-          "photos": []
-      },
-      {
-          "answer_id": 95,
-          "body": "Supposedly suede, but I think its synthetic",
-          "date": "2020-09-15T01:53:52.000Z",
-          "answerer_name": "metslover",
-          "helpfulness": 3,
-          "photos": []
-      },
-      {
-          "answer_id": 6879316,
-          "body": null,
-          "date": "2023-12-08T02:53:58.000Z",
-          "answerer_name": null,
-          "helpfulness": 0,
           "photos": []
       }
   ]

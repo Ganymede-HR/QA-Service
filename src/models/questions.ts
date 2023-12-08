@@ -97,6 +97,7 @@ const getQuestions = async (
       } else {
         acc[c.question_id].answers = { [c.a_id]: answer };
       }
+      acc[c.question_id].answers[c.a_id]?.photos?.sort((a: any, b: any) => (+a.id) - (+b.id));
     } else {
       acc[c.question_id] = {
         question_id: c.question_id,
@@ -111,7 +112,6 @@ const getQuestions = async (
         },
       };
     }
-
     return acc;
   }, {});
   const transformedResults = Object.values(transformedResultsObject) as QuestionType[];
@@ -166,6 +166,7 @@ const getQuestionAnswers = async (
       if (c.id) {
         acc[c.a_id].photos.push(answerPhoto);
       }
+      acc[c.a_id]?.photos?.sort((a: any, b: any) => (+a.id) - (+b.id));
     } else {
       acc[c.a_id] = {
         answer_id: c.a_id,
