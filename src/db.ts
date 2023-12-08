@@ -5,11 +5,11 @@ const {
   DATABASE_PORT,
   DATABASE_USER,
   DATABASE_PASSWORD,
+  DATABASE_NAME,
+  RESET_TEST_DATABASE,
 } = process.env || {};
 
-const DATABASE = 'ganymede_QA';
-
-if (!DATABASE_HOST || !DATABASE_PORT || !DATABASE_USER || !DATABASE_PASSWORD) {
+if (!DATABASE_HOST || !DATABASE_PORT || !DATABASE_USER || !DATABASE_PASSWORD || !DATABASE_NAME) {
   throw new Error('missing database credentials');
 }
 
@@ -20,10 +20,18 @@ const db = mysql.createPool({
   password: DATABASE_PASSWORD,
   waitForConnections: true,
 });
-const initializeDB = (async () => {
-  await db.query(`CREATE DATABASE IF NOT EXISTS ${DATABASE}`);
-  await db.query(`USE ${DATABASE}`);
-  await db.query(`CREATE TABLE IF NOT EXISTS questions (
+
+const initializeDB = async () => {
+  if (JSON.parse(RESET_TEST_DATABASE || 'false') === true) {
+    if (!DATABASE_NAME.includes('_TEST')) {
+      throw new Error(`Missing or invalid test database: ${DATABASE_NAME}`);
+    } else {
+      await db.execute(`DROP DATABASE IF EXISTS ${DATABASE_NAME}`);
+    }
+  }
+  await db.execute(`CREATE DATABASE IF NOT EXISTS ${DATABASE_NAME}`);
+  await db.query(`USE ${DATABASE_NAME}`);
+  await db.execute(`CREATE TABLE IF NOT EXISTS questions (
   id INT NOT NULL AUTO_INCREMENT,
   product_id INT NOT NULL,
   body TEXT,
@@ -35,7 +43,7 @@ const initializeDB = (async () => {
 
   PRIMARY KEY (id)
  )`);
-  await db.query(`CREATE TABLE IF NOT EXISTS answers (
+  await db.execute(`CREATE TABLE IF NOT EXISTS answers (
   id INT NOT NULL AUTO_INCREMENT, 
   question_id INT NOT NULL,
   body TEXT,
@@ -48,7 +56,7 @@ const initializeDB = (async () => {
   PRIMARY KEY (id),
   FOREIGN KEY (question_id) REFERENCES questions(id)
  )`);
-  await db.query(`CREATE TABLE IF NOT EXISTS answer_photos (
+  await db.execute(`CREATE TABLE IF NOT EXISTS answer_photos (
   id INT NOT NULL AUTO_INCREMENT, 
   answer_id INT NOT NULL, 
   url TEXT NOT NULL, 
@@ -56,6 +64,8 @@ const initializeDB = (async () => {
   PRIMARY KEY (id), 
   FOREIGN KEY (answer_id) REFERENCES answers(id)
  )`);
-})();
+};
 
-export { db, initializeDB };
+const dbInitPromise = initializeDB();
+
+export { db, dbInitPromise, initializeDB };

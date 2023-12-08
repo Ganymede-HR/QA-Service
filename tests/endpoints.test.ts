@@ -1,20 +1,23 @@
 import request from 'supertest';
 import { app, closeServer } from '../src/index';
-import { initializeDB, db } from '../src/db';
+import seedTestDB from './prepareTests';
+
+const { DATABASE_NAME } = process.env;
+
+const testDb = seedTestDB();
 
 beforeAll(async () => {
-  await initializeDB;
+  await testDb;
 });
 
 afterAll(async () => {
+  if (!DATABASE_NAME || !DATABASE_NAME?.includes('_TEST')) {
+    console.error('skipping test db cleanup steps');
+  }
   await closeServer();
 });
 
 describe('check endpoints exist', () => {
-  afterAll(async () => {
-    await db.end();
-  });
-
   test('GET /qa/questions => ', async () => {
     const response = await request(app).get('/qa/questions');
     expect(response.status).toBe(200);

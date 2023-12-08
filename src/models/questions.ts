@@ -204,7 +204,7 @@ const postQuestion = (
   db.query(`
     INSERT INTO questions (body, asker_name, asker_email, product_id)
     VALUES (?,?,?,?)
-  `, [body, name, email, productId])
+  `, [body || null, name || null, email || null, productId])
 );
 
 const markQuestionHelpful = (

@@ -11,25 +11,28 @@ const postAnswer = (
   } :
   {
     questionId: number;
-    body: string;
-    name: string;
-    email: string;
-    photos: string[];
+    body?: string;
+    name?: string;
+    email?: string;
+    photos?: string[];
   },
 ) => (
   db.execute<ResultSetHeader>(`
      INSERT INTO answers (question_id, body, answerer_name, answerer_email)
      VALUES (?, ?, ?, ?)
-  `, [questionId, body, name, email])
+  `, [questionId, body || null, name || null, email || null])
     .then((result) => {
-      const answerId = result[0].insertId;
-      return db.query(
-        `
-        INSERT INTO answer_photos (answer_id, url) 
-        VALUES ${photos.map(() => ('(?, ?)')).join(',')}
-        `,
-        photos.map((p) => [answerId, p]).flat(),
-      );
+      if (photos && photos.length > 0) {
+        const answerId = result[0].insertId;
+        return db.query(
+          `
+          INSERT INTO answer_photos (answer_id, url) 
+          VALUES ${photos.map(() => ('(?, ?)')).join(',')}
+          `,
+          photos.map((p) => [answerId, p]).flat(),
+        );
+      }
+      return result;
     })
 );
 
