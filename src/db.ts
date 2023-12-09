@@ -18,6 +18,7 @@ const db = mysql.createPool({
   user: DATABASE_USER,
   port: +DATABASE_PORT,
   password: DATABASE_PASSWORD,
+  database: DATABASE_NAME,
   waitForConnections: true,
   timezone: 'Z',
 });
