@@ -66,6 +66,7 @@ const getQuestions = async (
         ROW_NUMBER() OVER (PARTITION BY qa.question_id ORDER BY a.date_written) AS answer_row_num
       FROM qa
       LEFT JOIN answers a ON a.question_id = qa.question_id
+      WHERE a.reported IS NULL OR a.reported <> TRUE
     ) AS an
     LEFT JOIN answer_photos ap ON ap.answer_id = an.a_id
     WHERE an.answer_row_num <= ?;
