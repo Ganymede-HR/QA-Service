@@ -41,3 +41,12 @@ npm run test
 ```
 
 Tests will run on the provided test database. Each time running the test will tear down the prior test database and reconstruct it.
+
+## Performance Testing
+
+Local performance tests written with k6.
+To run performance tests start the production server and run performance test script
+
+```
+npm run test:perf
+```

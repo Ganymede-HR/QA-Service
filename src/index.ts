@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import express, { json } from 'express';
+import morgan from 'morgan';
 import router from './routes';
 
 const PORT = process.env.port || 8080;
 const app = express();
+app.use(morgan('tiny'));
 app.use(json());
 
 app.use('/qa', router);
